@@ -23,6 +23,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/create', \App\Livewire\Pages\Product\CreateProduct::class)->name('product.create');
 
+    Route::prefix('log')->group(function () {
+        Route::get('/nbp-log', \App\Livewire\Pages\Log\NbpLog::class)->name('log.nbp-log');
+        Route::get('/nbp-data', [\App\Livewire\Pages\Log\NbpLog::class, 'getData'])->name('log.nbp-data');
+    });
+
     Route::prefix('reporting')->group(function () {
         Route::get('/portal', \App\Livewire\Pages\Reporting\ReportPortal::class)->name('reporting.report-portal');
         Route::get('/portal-data', [\App\Livewire\Pages\Reporting\ReportPortal::class, 'getReportPortal'])->name('reporting.portal-data');

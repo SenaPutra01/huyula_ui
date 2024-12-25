@@ -90,12 +90,50 @@ class ReportDigiport extends Component
         }
     }
 
+    // public function getReportDigiport()
+    // {
+    //     $start = request()->get('start', 0);
+    //     $length = request()->get('length', 10);
+
+    //     $reporting = ReportingReportDigiport::select([
+    //         'productid',
+    //         'licensecount',
+    //         'subscriberid',
+    //         'license_count',
+    //         'starttime',
+    //         'endtime',
+    //         'grl',
+    //         'activation_code',
+    //         'created_at'
+    //     ])
+    //         ->orderBy('starttime', 'desc')  // Pastikan kolom yang di-sort sudah terindex
+    //         ->offset($start)
+    //         ->limit($length)
+    //         ->get();
+
+    //     $totalData = ReportingReportDigiport::count();
+
+
+    //     return response()->json([
+    //         'draw' => request()->input('draw'),
+    //         'recordsTotal' => $totalData,
+    //         'recordsFiltered' => $totalData,
+    //         'data' => $reporting,
+    //     ]);
+    // }
+
     public function getReportDigiport()
     {
         $start = request()->get('start', 0);
         $length = request()->get('length', 10);
+        $search = request()->get('search', []);
 
-        $reporting = ReportingReportDigiport::select([
+        $searchMsisdn = $search['msisdn'] ?? '';
+        $searchSubscriberId = $search['subscriberid'] ?? '';
+        $startDate = $search['startDate'] ?? '';
+        $endDate = $search['endDate'] ?? '';
+
+        $query = ReportingReportDigiport::select([
             'productid',
             'licensecount',
             'subscriberid',
@@ -105,20 +143,38 @@ class ReportDigiport extends Component
             'grl',
             'activation_code',
             'created_at'
-        ])
-            ->orderBy('starttime', 'desc')  // Pastikan kolom yang di-sort sudah terindex
+        ]);
+
+        if ($searchMsisdn) {
+            $query->where('msisdn', 'like', '%' . $searchMsisdn . '%');
+        }
+
+        if ($searchSubscriberId) {
+            $query->where('subscriberid', 'like', '%' . $searchSubscriberId . '%');
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('starttime', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('starttime', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->where('endtime', '<=', $endDate);
+        }
+
+        $totalData = ReportingReportDigiport::count();
+
+        $reporting = $query->orderBy('starttime', 'desc')
             ->offset($start)
             ->limit($length)
             ->get();
 
-        $totalData = ReportingReportDigiport::count();
-
+        $filteredData = $query->count();
 
         return response()->json([
             'draw' => request()->input('draw'),
             'recordsTotal' => $totalData,
-            'recordsFiltered' => $totalData,
-            'data' => $reporting,
+            'recordsFiltered' => $filteredData,
+            'data' => $reporting
         ]);
     }
 

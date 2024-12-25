@@ -33,14 +33,29 @@
                 </div>
             </div>
             <div class="section section-data-tables">
-                <!-- Page Length Options -->
                 <div class="row">
                     <div class="col s12">
                         <div class="card">
                             <div class="card-content mt-3">
                                 <div class="row">
+                                    <div class="mb-3 flex justify-end space-x-3">
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'text'" :label="'Search Subcriber ID'"
+                                                :id="'search_subscriberid'" />
+                                        </div>
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'date'" :label="'Start Date'"
+                                                :id="'search_startDate'" />
+                                        </div>
+                                        <span class="mx-4 text-gray-500">to</span>
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'date'" :label="'End Date'"
+                                                :id="'search_endDate'" />
+                                        </div>
+                                    </div>
+
                                     <div class="col s12">
-                                        <table id="report-portal-table" class="display">
+                                        <table id="report-portal-table" class="display nowrap" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Subcriber ID</th>
@@ -72,14 +87,48 @@
 
 @push('js')
 <script>
+    let search_msisdn = '';
+    let search_subscriberid = '';
+    let search_startDate = '';
+    let search_endDate = '';
+
     $(document).ready(function() {
-        $('#report-portal-table').DataTable({
+        var table = $('#report-portal-table').DataTable({
             processing: true,
             serverSide: true,
-            searching: true,
-            ajax: {
-                url: '{{ route('reporting.portal-data') }}',
-                dataSrc: 'data'
+            ajax: function(data, callback, settings) {
+                const searchValue = {
+                    msisdn: search_msisdn,
+                    subscriberid: search_subscriberid,
+                    startDate: search_startDate,
+                    endDate: search_endDate
+                };
+
+                $.ajax({
+                    url: '{{ route('reporting.portal-data') }}',
+                    method: 'GET',
+                    data: {
+                        start: settings.start,
+                        length: settings.length,
+                        search: searchValue,
+                        draw: settings.draw
+                    },
+                    success: function(response) {
+                        if (response && response.data) {
+                            callback({
+                                draw: settings.draw,
+                                recordsTotal: response.recordsTotal,
+                                recordsFiltered: response.recordsFiltered,
+                                data: response.data
+                            });
+                        } else {
+                            console.error('Invalid JSON response');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching data: ' + error);
+                    }
+                });
             },
             columns: [
                 { data: 'subscriber_id' },
@@ -87,36 +136,58 @@
                 { data: 'product_code' },
                 { data: 'license_count' },
                 { data: 'subscription_first_start_date',
-                    render: function(data, type, row) {
+                    render: function(data) {
                         return moment(data).format('YYYY-MM-DD HH:mm');
                     }
                 },
                 { data: 'command' },
                 { data: 'command_processing_date',
-                    render: function(data, type, row) {
+                    render: function(data) {
                         return moment(data).format('YYYY-MM-DD HH:mm');
                     }
                 },
                 { data: 'command_subscription_start_date',
-                    render: function(data, type, row) {
+                    render: function(data) {
                         return moment(data).format('YYYY-MM-DD HH:mm');
                     }
                 },
                 { data: 'command_subscription_end_date_',
-                    render: function(data, type, row) {
+                    render: function(data) {
                         return moment(data).format('YYYY-MM-DD HH:mm');
                     }
                 }
             ],
-            paging: true,
-            lengthMenu: [10, 25, 50],
-            responsive: true,
-            scrollX: true
+            scrollY: 450,
+            scrollX: true,
+            pageLength: 10,
+            deferRender: true,
+            stateSave: true
+        });
+
+        // Function to handle search input and trigger filter reload
+        function handleSearchInput(event, filterType) {
+            if (filterType === 'subscriberid') {
+                search_subscriberid = $('#search_subscriberid').val();
+            } else if (filterType === 'startDate') {
+                search_startDate = $('#search_startDate').val();
+            } else if (filterType === 'endDate') {
+                search_endDate = $('#search_endDate').val();
+            }
+
+            // Reload the DataTable with updated filters
+            table.ajax.reload();
+        }
+
+        $('#search_subscriberid').on('input', function() {
+            handleSearchInput(event, 'subscriberid');
+        });
+        $('#search_startDate').on('input', function() {
+            handleSearchInput(event, 'startDate');
+        });
+        $('#search_endDate').on('input', function() {
+            handleSearchInput(event, 'endDate');
         });
     });
-
-
 </script>
-<script src=" {{ asset('dist/') }}/assets/js/scripts/data-tables.js">
-</script>
+
 @endpush

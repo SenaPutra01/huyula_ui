@@ -16,11 +16,13 @@ new #[Layout('layouts.guest')] class extends Component
     {
         $this->validate();
 
+        
         $this->form->authenticate();
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', absolute: false));
+        // $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
 }; ?>
 
@@ -75,18 +77,13 @@ new #[Layout('layouts.guest')] class extends Component
     <div class="flex justify-between items-center mb-6">
         <img alt="Telkomsel Logo" class="h-20 w-auto" height="50"
             src="{{ asset('dist/assets/images/logo-telkomsel-baru.webp') }}" width="50" />
-        {{--
-        <img alt="Telkomsel Sphere Logo" class="h-10" height="50"
-            src="https://storage.googleapis.com/a1aa/image/mH5bnx6USXL4OxqlngOcOYguDHeUg13Zq4WwMfTCS8DRfz0nA.jpg"
-            width="50" />
-        --}}
     </div>
 
     <h2 class="text-2xl font-bold mb-6">Log In</h2>
 
     <form wire:submit="login">
         <!-- Email Address -->
-        <div>
+        {{-- <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email"
                 required autofocus autocomplete="username" />
@@ -101,6 +98,22 @@ new #[Layout('layouts.guest')] class extends Component
                 name="password" required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
+        </div> --}}
+
+        <div>
+            <x-input-label for="email" :value="__('Email')" />
+            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email"
+                required autofocus autocomplete="username" />
+            {{--
+            <x-input-error :messages="$errors->get('form.email')" class="mt-2" /> --}}
+        </div>
+
+        <!-- Password -->
+        <div class="mt-4">
+            <x-input-label for="password" :value="__('Password')" />
+            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full" type="password"
+                name="password" required autocomplete="current-password" />
+            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
         </div>
 
         <!-- Remember Me -->
@@ -112,11 +125,6 @@ new #[Layout('layouts.guest')] class extends Component
             </label>
         </div>
 
-        {{-- <div class="mt-4 mb-4">
-            <x-primary-button class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div> --}}
         <button class="my-4 w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700" type="submit">
             {{ __('Log in') }} </button>
 

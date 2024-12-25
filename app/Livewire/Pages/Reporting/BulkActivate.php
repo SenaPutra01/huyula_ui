@@ -21,7 +21,8 @@ class BulkActivate extends Component
         $username = env('API_USERNAME');
         $password = env('API_PASSWORD');
         // dd($username);
-        $url = baseUrl('ActivateBulk-test');
+        $url = baseUrlProd('ActivateBulk');
+        // $url = baseUrl('ActivateBulk-test');
 
 
         $response = Http::withBasicAuth($username, $password)

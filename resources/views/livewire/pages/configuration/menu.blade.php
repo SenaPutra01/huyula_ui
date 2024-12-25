@@ -66,8 +66,11 @@
         </div>
     </div>
     <x-modal name="create-menu" :show="$errors->isNotEmpty()" focusable>
-        <livewire:pages.reporting.bulk-activate />
+        <livewire:pages.configuration.create-menu />
     </x-modal>
+    {{-- <x-modal name="create-menu" :show="$errors->isNotEmpty()" focusable>
+        <livewire:pages.reporting.bulk-activate />
+    </x-modal> --}}
 </div>
 
 @push('js')

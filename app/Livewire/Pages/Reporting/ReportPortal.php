@@ -49,7 +49,6 @@ class ReportPortal extends Component
             ];
             $sheet->fromArray($headers, NULL, 'A1');
 
-            // Isi data ke dalam spreadsheet
             $rows = [];
             foreach ($data as $item) {
                 $rows[] = [
@@ -90,8 +89,14 @@ class ReportPortal extends Component
     {
         $start = request()->get('start', 0);
         $length = request()->get('length', 10);
+        $search = request()->get('search', []);
 
-        $reporting = report_portal::select([
+        $searchMsisdn = $search['msisdn'] ?? '';
+        $searchSubscriberId = $search['subscriberid'] ?? '';
+        $startDate = $search['startDate'] ?? '';
+        $endDate = $search['endDate'] ?? '';
+
+        $query = report_portal::select([
             'subscriber_id',
             'license_id',
             'product_code',
@@ -101,24 +106,41 @@ class ReportPortal extends Component
             'command_processing_date',
             'command_subscription_start_date',
             'command_subscription_end_date_'
-            // 'command_trial_intervals_quantity',
-            // 'command_chargeable_intervals_quantity',
-        ])
-            ->orderBy('subscription_first_start_date', 'desc')  // Pastikan kolom yang di-sort sudah terindex
+        ]);
+
+        if ($searchMsisdn) {
+            $query->where('msisdn', 'like', '%' . $searchMsisdn . '%');
+        }
+
+        if ($searchSubscriberId) {
+            $query->where('subscriber_id', 'like', '%' . $searchSubscriberId . '%');
+        }
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('command_subscription_start_date', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $query->where('command_subscription_start_date', '>=', $startDate);
+        } elseif ($endDate) {
+            $query->where('command_subscription_end_date_', '<=', $endDate);
+        }
+
+        $totalData = report_portal::count();
+
+        $reporting = $query->orderBy('subscription_first_start_date', 'desc')
             ->offset($start)
             ->limit($length)
             ->get();
 
-        $totalData = report_portal::count();
-
+        $filteredData = $query->count();
 
         return response()->json([
             'draw' => request()->input('draw'),
             'recordsTotal' => $totalData,
-            'recordsFiltered' => $totalData,
-            'data' => $reporting,
+            'recordsFiltered' => $filteredData,
+            'data' => $reporting
         ]);
     }
+
 
     public function render()
     {

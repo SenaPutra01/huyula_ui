@@ -39,8 +39,24 @@
                         <div class="card">
                             <div class="card-content mt-3">
                                 <div class="row">
+                                    <div class="mb-3 flex justify-end space-x-3">
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'text'" :label="'Search Subcriber ID'"
+                                                :id="'search_subscriberid'" />
+                                        </div>
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'date'" :label="'Start Date'"
+                                                :id="'search_startDate'" />
+                                        </div>
+                                        <span class="mx-4 text-gray-500">to</span>
+                                        <div class="flex-1 max-w-xs">
+                                            <x-floating-input :type="'date'" :label="'End Date'"
+                                                :id="'search_endDate'" />
+                                        </div>
+                                    </div>
+
                                     <div class="col s12">
-                                        <table id="report-digiport-table" class="display">
+                                        <table id="report-digiport-table" class="display nowrap" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Product ID</th>
@@ -73,42 +89,103 @@
 
 @push('js')
 <script>
+    let search_msisdn = '';
+    let search_subscriberid = '';
+    let search_startDate = '';
+    let search_endDate = '';
+
     $(document).ready(function() {
-            $('#report-digiport-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '{{ route('reporting.digiport-data') }}',
-                    dataSrc: 'data'
-                },
-                columns: [
-                    { data: 'productid' },
-                    { data: 'licensecount' },
-                    { data: 'subscriberid' },
-                    { data: 'license_count' },
-                    { data: 'grl' },
-                    { data: 'starttime',
-                        render: function(data, type, row) {
-                            return moment(data).format('YYYY-MM-DD HH:mm');
+        var table = $('#report-digiport-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: function(data, callback, settings) {
+                const searchValue = {
+                    msisdn: search_msisdn,
+                    subscriberid: search_subscriberid,
+                    startDate: search_startDate,
+                    endDate: search_endDate
+                };
+
+                $.ajax({
+                    url:  '{{ route('reporting.digiport-data') }}',
+                    method: 'GET',
+                    data: {
+                        start: settings.start,
+                        length: settings.length,
+                        search: searchValue,
+                        draw: settings.draw
+                    },
+                    success: function(response) {
+                        if (response && response.data) {
+                            callback({
+                                draw: settings.draw,
+                                recordsTotal: response.recordsTotal,
+                                recordsFiltered: response.recordsFiltered,
+                                data: response.data
+                            });
+                        } else {
+                            console.error('Invalid JSON response');
                         }
                     },
-                    { data: 'endtime',
-                        render: function(data, type, row) {
-                            return moment(data).format('YYYY-MM-DD HH:mm');
-                        }
-                    },
-                    { data: 'created_at',
-                        render: function(data, type, row) {
-                            return moment(data).format('YYYY-MM-DD HH:mm');
-                        }
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching data: ' + error);
                     }
-                ],
-                paging: true,
-                lengthMenu: [10, 25, 50],
-                responsive: true,
-                scrollX: true
-            });
+                });
+            },
+            columns: [
+                { data: 'productid' },
+                { data: 'licensecount' },
+                { data: 'subscriberid' },
+                { data: 'license_count' },
+                { data: 'grl' },
+                { data: 'starttime',
+                    render: function(data, type, row) {
+                        return moment(data).format('YYYY-MM-DD HH:mm');
+                    }
+                },
+                { data: 'endtime',
+                    render: function(data, type, row) {
+                        return moment(data).format('YYYY-MM-DD HH:mm');
+                    }
+                },
+                { data: 'created_at',
+                    render: function(data, type, row) {
+                        return moment(data).format('YYYY-MM-DD HH:mm');
+                    }
+                }
+            ],
+            // scrollY: 450,
+            // scrollX: true,
+            pageLength: 10,
+            deferRender: true,
+            stateSave: true,
+            
         });
+
+        // Function to handle search input and trigger filter reload
+        function handleSearchInput(event, filterType) {
+            if (filterType === 'subscriberid') {
+                search_subscriberid = $('#search_subscriberid').val();
+            } else if (filterType === 'startDate') {
+                search_startDate = $('#search_startDate').val();
+            } else if (filterType === 'endDate') {
+                search_endDate = $('#search_endDate').val();
+            }
+
+            // Reload the DataTable with updated filters
+            table.ajax.reload();
+        }
+
+        $('#search_subscriberid').on('input', function() {
+            handleSearchInput(event, 'subscriberid');
+        });
+        $('#search_startDate').on('input', function() {
+            handleSearchInput(event, 'startDate');
+        });
+        $('#search_endDate').on('input', function() {
+            handleSearchInput(event, 'endDate');
+        });
+    });
 </script>
-<script src="{{ asset('dist/') }}/assets/js/scripts/data-tables.js"></script>
+
 @endpush

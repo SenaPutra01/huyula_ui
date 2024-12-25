@@ -67,28 +67,28 @@ $(window).on("load", function() {
              pointHoverBorderWidth: 2,
              pointRadius: 4
           },
-          {
-             label: "My Second dataset",
-             data: [28, 48, 40, 19, 86, 27, 90],
-             fill: false,
-             borderColor: "#03a9f4",
-             pointBorderColor: "#03a9f4",
-             pointBackgroundColor: "#FFF",
-             pointBorderWidth: 2,
-             pointHoverBorderWidth: 2,
-             pointRadius: 4
-          },
-          {
-             label: "My Third dataset - No bezier",
-             data: [45, 25, 16, 36, 67, 18, 76],
-             fill: false,
-             borderColor: "#ffc107",
-             pointBorderColor: "#ffc107",
-             pointBackgroundColor: "#FFF",
-             pointBorderWidth: 2,
-             pointHoverBorderWidth: 2,
-             pointRadius: 4
-          }
+         //  {
+         //     label: "My Second dataset",
+         //     data: [28, 48, 40, 19, 86, 27, 90],
+         //     fill: false,
+         //     borderColor: "#03a9f4",
+         //     pointBorderColor: "#03a9f4",
+         //     pointBackgroundColor: "#FFF",
+         //     pointBorderWidth: 2,
+         //     pointHoverBorderWidth: 2,
+         //     pointRadius: 4
+         //  },
+         //  {
+         //     label: "My Third dataset - No bezier",
+         //     data: [45, 25, 16, 36, 67, 18, 76],
+         //     fill: false,
+         //     borderColor: "#ffc107",
+         //     pointBorderColor: "#ffc107",
+         //     pointBackgroundColor: "#FFF",
+         //     pointBorderWidth: 2,
+         //     pointHoverBorderWidth: 2,
+         //     pointRadius: 4
+         //  }
        ]
     };
  

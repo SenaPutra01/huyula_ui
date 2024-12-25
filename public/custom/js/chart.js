@@ -3,38 +3,126 @@ jQuery(async () => {
     var labels = JSON.parse($("#product-codes").val());
 
     (function (window, document, $) {
+
+        var ctx = $("#line-chart");
+ 
+        // Chart Options
+        var chartOptions = {
+           responsive: true,
+           maintainAspectRatio: false,
+           legend: {
+              position: "bottom"
+           },
+           hover: {
+              mode: "label"
+           },
+           scales: {
+              xAxes: [
+                 {
+                    display: true,
+                    gridLines: {
+                       color: "#f3f3f3",
+                       drawTicks: false
+                    },
+                    scaleLabel: {
+                       display: true,
+                       labelString: "Month"
+                    }
+                 }
+              ],
+              yAxes: [
+                 {
+                    display: true,
+                    gridLines: {
+                       color: "#f3f3f3",
+                       drawTicks: false
+                    },
+                    scaleLabel: {
+                       display: true,
+                       labelString: "Value"
+                    }
+                 }
+              ]
+           },
+           title: {
+              display: true,
+              text: "Line Chart - Legend"
+           }
+        };
+     
+        // Chart Data
+        var chartData = {
+           labels: ["January", "February", "March", "April", "May", "June", "July"],
+           datasets: [
+              {
+                 label: "My First dataset",
+                 data: [65, 59, 80, 81, 56, 55, 40],
+                 fill: false,
+                 borderColor: "#e91e63",
+                 pointBorderColor: "#e91e63",
+                 pointBackgroundColor: "#FFF",
+                 pointBorderWidth: 2,
+                 pointHoverBorderWidth: 2,
+                 pointRadius: 4
+              },
+              {
+                 label: "My Second dataset",
+                 data: [28, 48, 40, 19, 86, 27, 90],
+                 fill: false,
+                 borderColor: "#03a9f4",
+                 pointBorderColor: "#03a9f4",
+                 pointBackgroundColor: "#FFF",
+                 pointBorderWidth: 2,
+                 pointHoverBorderWidth: 2,
+                 pointRadius: 4
+              },
+              {
+                 label: "My Third dataset - No bezier",
+                 data: [45, 25, 16, 36, 67, 18, 76],
+                 fill: false,
+                 borderColor: "#ffc107",
+                 pointBorderColor: "#ffc107",
+                 pointBackgroundColor: "#FFF",
+                 pointBorderWidth: 2,
+                 pointHoverBorderWidth: 2,
+                 pointRadius: 4
+              }
+           ]
+        };
+
+
         // Donut chart
         // -----------
-        var CurrentBalanceDonutChart = new Chartist.Pie(
-            "#current-balance-donut-chart",
-            {
-                labels: [1, 2],
-                series: [
-                    { meta: "Completed", value: 80 },
-                    { meta: "Remaining", value: 20 },
-                ],
-            },
+        // var CurrentBalanceDonutChart = new Chartist.Pie(
+        //     "#current-balance-donut-chart",
+        //     {
+        //         labels: [1, 2],
+        //         series: [
+        //             { meta: "Completed", value: 80 },
+        //             { meta: "Remaining", value: 20 },
+        //         ],
+        //     },
 
-            {
-                donut: true,
-                donutWidth: 8,
-                showLabel: false,
-                plugins: [
-                    Chartist.plugins.tooltip({
-                        class: "current-balance-tooltip",
-                        appendToBody: true,
-                    }),
-                    Chartist.plugins.fillDonut({
-                        items: [
-                            {
-                                content:
-                                    '<p class="small">Balance</p><h5 class="mt-0 mb-0">$ 10k</h5>',
-                            },
-                        ],
-                    }),
-                ],
-            }
-        );
+        //     {
+        //         donut: true,
+        //         donutWidth: 8,
+        //         showLabel: false,
+        //         plugins: [
+        //             Chartist.plugins.tooltip({
+        //                 class: "current-balance-tooltip",
+        //                 appendToBody: true,
+        //             }),
+        //             Chartist.plugins.fillDonut({
+        //                 items: [
+        //                     {
+        //                         content:
+        //                             '<p class="small">Balance</p><h5 class="mt-0 mb-0">$ 10k</h5>',
+        //                     },
+        //                 ],
+        //             }),
+        //         ],
+        //     }
+        // );
 
         // Total Transaction
         // -----------------

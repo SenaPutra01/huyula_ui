@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LogActivity extends Model
+class SubscriberActivity extends Model
 {
     use HasFactory;
+
+    // Tentukan nama tabel dengan schema
+    // protected $table = 'dev.subscriber'; // Menggunakan schema dev
 
     protected $table;
 
@@ -21,16 +24,18 @@ class LogActivity extends Model
         parent::__construct($attributes);
 
         // Menetapkan nama tabel menggunakan helper
-        $this->table = table('nbp_log');
+        $this->table = table('subscribe_activity');
     }
 
     protected $fillable = [
-        'created_at',
-        'req',
-        'resp',
-        'status',
         'msisdn',
-        'trx_id',
-        'transaction_id'
+        'subscriberid',
+        'status',
+        'statuschangetime',
+        'starttime',
+        'endtime',
+        'activationcode',
+        'req_text',
+        'resp_text'
     ];
 }

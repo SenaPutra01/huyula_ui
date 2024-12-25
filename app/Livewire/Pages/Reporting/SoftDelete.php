@@ -21,7 +21,8 @@ class SoftDelete extends Component
         $username = env('API_USERNAME');
         $password = env('API_PASSWORD');
 
-        $url = baseUrl('SoftCancleBulk-test');
+        $url = baseUrlProd('SoftCancleBulk');
+        // $url = baseUrl('SoftCancleBulk-test');
 
 
         $response = Http::withBasicAuth($username, $password)

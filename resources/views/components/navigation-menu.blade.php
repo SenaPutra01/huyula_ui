@@ -43,8 +43,7 @@
         <li class="bold">
             <a class="collapsible-header waves-effect waves-cyan" href="JavaScript:void(0)"><i
                     class="material-icons">insert_drive_file</i><span class="menu-title"
-                    data-i18n="User">Reporting</span><span
-                    class="badge badge pill purple float-right mr-10">3</span></a>
+                    data-i18n="User">Reporting</span></a>
             <div class="collapsible-body">
                 <ul class="collapsible collapsible-sub" data-collapsible="accordion">
                     <x-nav-link :active="request()->routeIs('reporting.report-portal')" href="/reporting/portal"><i
@@ -60,11 +59,37 @@
                             data-i18n="eCommerce">Report
                             softcancel</span>
                     </x-nav-link>
+                    <x-nav-link :active="request()->routeIs('reporting.report-softcancel')"
+                        href="/reporting/softcancel"><i class="material-icons">radio_button_unchecked</i><span
+                            data-i18n="eCommerce">Report Subscription</span>
+                    </x-nav-link>
+                    <x-nav-link :active="request()->routeIs('reporting.report-softcancel')"
+                        href="/reporting/softcancel"><i class="material-icons">radio_button_unchecked</i><span
+                            data-i18n="eCommerce">Report
+                            Retry</span>
+                    </x-nav-link>
                 </ul>
             </div>
-            <x-nav-link :active="request()->routeIs('logs')" href="/logs"><i class="material-icons">assessment</i><span
-                    data-i18n="eCommerce">Log Activity</span>
-            </x-nav-link>
+        </li>
+
+        <li class="navigation-header">
+            <a class="navigation-header-text">Log Activity</a><i
+                class="navigation-header-icon material-icons">more_horiz</i>
+        </li>
+        <li class="bold">
+            <a class="collapsible-header waves-effect waves-cyan" href="JavaScript:void(0)"><i
+                    class="material-icons">insert_drive_file</i><span class="menu-title" data-i18n="User">Log
+                    Activity</span></a>
+            <div class="collapsible-body">
+                <ul class="collapsible collapsible-sub" data-collapsible="accordion">
+                    <x-nav-link :active="request()->routeIs('log.nbp-log')" href="/log/nbp-log"><i
+                            class="material-icons">assessment</i><span data-i18n="eCommerce">NBP Log</span>
+                    </x-nav-link>
+                    <x-nav-link :active="request()->routeIs('logs')" href="/logs"><i
+                            class="material-icons">assessment</i><span data-i18n="eCommerce">Activity Log</span>
+                    </x-nav-link>
+                </ul>
+            </div>
         </li>
 
         <li class="navigation-header">
@@ -76,8 +101,7 @@
         </x-nav-link>
         <li class="bold">
             <a class="collapsible-header waves-effect waves-cyan" href="JavaScript:void(0)"><i
-                    class="material-icons">face</i><span class="menu-title" data-i18n="User">User</span><span
-                    class="badge badge pill purple float-right mr-10">3</span></a>
+                    class="material-icons">face</i><span class="menu-title" data-i18n="User">User</span></a>
             <div class="collapsible-body">
                 <ul class="collapsible collapsible-sub" data-collapsible="accordion">
                     <x-nav-link :active="request()->routeIs('manageUser')" href="/manageUser"><i

@@ -1,6 +1,6 @@
-<form wire:submit="createProduct" class="p-6">
+<form wire:submit="" class="p-6">
     <h2 class="text-lg font-medium text-gray-800">
-        {{ __('Create New Product') }}
+        {{ __('Create Menu') }}
     </h2>
 
     <div class="grid grid-row-3 grid-flow-col gap-2">
@@ -27,4 +27,5 @@
             {{ __('Submit') }}
         </x-danger-button>
     </div>
+
 </form>

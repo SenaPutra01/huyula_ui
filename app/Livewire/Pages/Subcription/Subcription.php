@@ -9,6 +9,13 @@ use Livewire\Component;
 
 class Subcription extends Component
 {
+    public $msisdn;
+    public $status;
+    public $startTime;
+    public $endTime;
+    public $productId;
+    public $shorten;
+
     public function getInfo($req_msisdn, $req_productcode)
     {
         $url = baseUrl('/getInfo');
@@ -25,16 +32,16 @@ class Subcription extends Component
             ],
         ]);
 
-
         $data = json_decode($response->getBody()->getContents(), true);
-
-        $msisdn = $data['msisdn'];
-        $status = $data['status'];
-        $startTime = $data['StartTime'];
-        $endTime = $data['EndTime'];
-        $productId = $data['ProductId'];
-        $shorten = $data['shorten'];
+        // dd($data);
+        $this->msisdn = $data['msisdn'];
+        $this->status = $data['status'];
+        $this->startTime = $data['StartTime'];
+        $this->endTime = $data['EndTime'];
+        $this->productId = $data['ProductId'];
+        $this->shorten = $data['shorten'];
     }
+
     public function subscriptionData()
     {
         $start = request()->get('start', 0);
